@@ -13,6 +13,12 @@ const AlimentacionForm = () => {
     setMensaje(null);
     setError(null);
 
+    // validación: descripción no puede ser solo números
+    if (/^\d+$/.test(descripcion.trim())) {
+      setError("❌ La descripción no puede ser solo números");
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:8090/api/alimentaciones", {
         method: "POST",
