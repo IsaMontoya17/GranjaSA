@@ -8,6 +8,7 @@ import ClientesList from './components/clientesList/ClientesList';
 import PorcinosList from './components/porcinosList/PorcinosList';
 import ClienteForm from "./pages/clientes/ClienteForm";
 import PoricnoForm from "./pages/porcinos/PorcinoForm";
+import Reportes from './pages/reportes/Reportes';
 
 import './App.css'
 
@@ -24,6 +25,7 @@ function App() {
         <Route path="/alimentacion/nuevo" element={<AlimentacionForm />} />
         <Route path="/clientes/nuevo" element={<ClienteForm />} />
         <Route path="/porcinos/nuevo" element={<PoricnoForm />} />
+        <Route path="/reportes" element={<Reportes />} />
       </Route>
     </Routes>
     </>
