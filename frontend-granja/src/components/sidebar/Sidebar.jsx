@@ -15,6 +15,7 @@ import styles from "./Sidebar.module.css";
 const Sidebar = () => {
   const [openPorcinos, setOpenPorcinos] = useState(false);
   const [openClientes, setOpenClientes] = useState(false);
+  const [openAlimentacion, setOpenAlimentacion] = useState(false);
 
   return (
     <aside className={`${styles.sidebar} d-none d-md-block`}>
@@ -73,10 +74,38 @@ const Sidebar = () => {
         </Collapse>
 
         {/* Alimentación */}
-        <Nav.Link as={NavLink} to="/alimentacion">
-          <FaUtensils className="me-2" />
-          Alimentación
-        </Nav.Link>
+        <div
+          className={styles.navItem}
+          onClick={() => setOpenAlimentacion(!openAlimentacion)}
+        >
+          <span>
+            <FaUtensils className="me-2" />
+            Alimentación
+          </span>
+          <FaChevronDown
+            className={`${styles.chevron} ${openAlimentacion ? styles.rotate : ""}`}
+          />
+        </div>
+        <Collapse in={openAlimentacion}>
+          <div>
+            <Nav.Link
+              as={NavLink}
+              to="/alimentacion/listar"
+              className={styles.subItem}
+            >
+              <FaList className="me-2" />
+              Listar Alimentaciones
+            </Nav.Link>
+            <Nav.Link
+              as={NavLink}
+              to="/alimentacion/nuevo"
+              className={styles.subItem}
+            >
+              <FaPlus className="me-2" />
+              Registrar Nueva Alimentación
+            </Nav.Link>
+          </div>
+        </Collapse>
 
         {/* Reportes */}
         <Nav.Link as={NavLink} to="/reportes">
