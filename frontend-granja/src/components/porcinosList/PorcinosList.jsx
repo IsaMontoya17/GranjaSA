@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { Container, Table, Button, Spinner, Row, Col, Modal, Form } from "react-bootstrap";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import { getPorcinos, deletePorcino, updatePorcino } from "../../services/porcinosService"; 
+import { getAlimentaciones } from "../../services/alimentacionService"; 
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const PorcinosList = () => {
     const [porcinos, setPorcinos] = useState([]);
+    const [alimentaciones, setAlimentaciones] = useState([]); // 🔹 Lista de alimentaciones
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [selectedPorcino, setSelectedPorcino] = useState(null);
@@ -15,11 +17,13 @@ const PorcinosList = () => {
     const fetchData = async () => {
         setLoading(true);
         try {
-            const data = await getPorcinos();
-            setPorcinos(data);
+            const dataPorcinos = await getPorcinos();
+            const dataAlimentaciones = await getAlimentaciones();
+            setPorcinos(dataPorcinos);
+            setAlimentaciones(dataAlimentaciones);
         } catch (error) {
-            console.error("Error al cargar porcinos:", error);
-            Swal.fire("Error", "No se pudieron cargar los porcinos", "error");
+            console.error("Error al cargar datos:", error);
+            Swal.fire("Error", "No se pudieron cargar los datos", "error");
         } finally {
             setLoading(false);
         }
@@ -209,23 +213,28 @@ const PorcinosList = () => {
                                 />
                             </Form.Group>
 
+                            {/* 🔹 Alimentación desplegable */}
                             <Form.Group className="mb-3">
                                 <Form.Label>Alimentación</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    value={selectedPorcino.alimentacion?.descripcion || ""}
-                                    disabled
-                                />
-                            </Form.Group>
-
-                            <Form.Group className="mb-3">
-                                <Form.Label>Dosis</Form.Label>
-                                <Form.Control
-                                    type="number"
-                                    min="0"
-                                    value={selectedPorcino.alimentacion?.dosis || ""}
-                                    disabled
-                                />
+                                <Form.Select
+                                    value={selectedPorcino.alimentacion?.id || ""}
+                                    onChange={(e) => {
+                                        const alimentacionSeleccionada = alimentaciones.find(
+                                            (a) => a.id === parseInt(e.target.value)
+                                        );
+                                        setSelectedPorcino({
+                                            ...selectedPorcino,
+                                            alimentacion: alimentacionSeleccionada,
+                                        });
+                                    }}
+                                >
+                                    <option value="">Seleccione una alimentación</option>
+                                    {alimentaciones.map((a) => (
+                                        <option key={a.id} value={a.id}>
+                                            {a.descripcion} (Dosis: {a.dosis})
+                                        </option>
+                                    ))}
+                                </Form.Select>
                             </Form.Group>
                         </Form>
                     )}
