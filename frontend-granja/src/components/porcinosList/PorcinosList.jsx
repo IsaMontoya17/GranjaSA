@@ -83,7 +83,6 @@ const PorcinosList = () => {
                 <Table hover responsive className="align-middle">
                     <thead className="table-dark">
                         <tr>
-                            <th>ID</th>
                             <th>Identificación</th>
                             <th>Raza</th>
                             <th>Edad</th>
@@ -96,7 +95,6 @@ const PorcinosList = () => {
                     <tbody>
                         {porcinos.map((porcino) => (
                             <tr key={porcino.id}>
-                                <td>{porcino.id}</td>
                                 <td>{porcino.identificacion}</td>
                                 <td>{porcino.raza}</td>
                                 <td>{porcino.edad}</td>
