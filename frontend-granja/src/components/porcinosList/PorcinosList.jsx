@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
-import { Container, Table, Button, Spinner } from "react-bootstrap";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { Container, Table, Button, Spinner, Row, Col } from "react-bootstrap";
+import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import { getPorcinos, deletePorcino } from "../../services/porcinosService"; 
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const PorcinosList = () => {
     const [porcinos, setPorcinos] = useState([]);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     const fetchData = async () => {
         setLoading(true);
@@ -76,9 +78,22 @@ const PorcinosList = () => {
                 className="bg-white shadow-lg rounded-3 p-4"
                 style={{ width: "100%", maxWidth: "1100px" }}
             >
-                <h2 className="mb-4 fw-bold text-dark border-bottom pb-2">
-                    Lista de Porcinos
-                </h2>
+                <Row className="align-items-center mb-4">
+                    <Col>
+                        <h2 className="fw-bold text-dark border-bottom pb-2">
+                            Lista de Porcinos
+                        </h2>
+                    </Col>
+                    <Col className="text-end">
+                        <Button
+                            variant="success"
+                            onClick={() => navigate("/porcinos/nuevo")}
+                        >
+                            <FaPlus className="me-1" /> Agregar Nuevo
+                        </Button>
+                    </Col>
+                </Row>
+
 
                 <Table hover responsive className="align-middle">
                     <thead className="table-dark">
