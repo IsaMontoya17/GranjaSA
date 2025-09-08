@@ -35,15 +35,6 @@ const CustomNavbar = () => {
                                     <i className="fas fa-plus-circle me-2"></i>
                                     Registrar nuevo porcino
                                 </NavDropdown.Item>
-                                <NavDropdown.Divider />
-                                <NavDropdown.Item href="#action/3.3">
-                                    <i className="fas fa-search me-2"></i>
-                                    Buscar por identificación
-                                </NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.5">
-                                    <i className="fas fa-utensils me-2"></i>
-                                    Registro de alimentación
-                                </NavDropdown.Item>
                             </NavDropdown>
 
                             <NavDropdown
@@ -63,15 +54,6 @@ const CustomNavbar = () => {
                                     <i className="fas fa-user-plus me-2"></i>
                                     Registrar nuevo cliente
                                 </NavDropdown.Item>
-                                <NavDropdown.Divider />
-                                <NavDropdown.Item href="#action/4.3">
-                                    <i className="fas fa-search me-2"></i>
-                                    Buscar por cédula
-                                </NavDropdown.Item>
-                                <NavDropdown.Item href="#action/4.4">
-                                    <i className="fas fa-pig me-2"></i>
-                                    Porcinos por cliente
-                                </NavDropdown.Item>
                             </NavDropdown>
 
                             <NavDropdown
@@ -90,10 +72,6 @@ const CustomNavbar = () => {
                                 <NavDropdown.Item href="#action/5.2">
                                     <i className="fas fa-plus-circle me-2"></i>
                                     Registrar nueva alimentación
-                                </NavDropdown.Item>
-                                <NavDropdown.Item href="#action/5.3">
-                                    <i className="fas fa-chart-bar me-2"></i>
-                                    Control de dosis
                                 </NavDropdown.Item>
                             </NavDropdown>
 
