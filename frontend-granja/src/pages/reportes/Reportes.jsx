@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { Container, Table, Form, Button, Spinner, Row, Col } from "react-bootstrap";
 import { getClientes } from "../../services/clientesService";
 import Swal from "sweetalert2";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+
 
 const Reportes = () => {
     const [clientes, setClientes] = useState([]);
@@ -27,7 +30,6 @@ const Reportes = () => {
         fetchData();
     }, []);
 
-    // Filtrar porcinos según filtros
     const filtrarPorcinos = (porcinos) => {
         return porcinos.filter((p) => {
             const matchRaza = filtroRaza ? p.raza.toLowerCase().includes(filtroRaza.toLowerCase()) : true;
@@ -36,14 +38,41 @@ const Reportes = () => {
         });
     };
 
-    // Filtrar clientes
     const clientesFiltrados = clientes.filter((c) =>
         filtroCliente ? `${c.nombres} ${c.apellidos}`.toLowerCase().includes(filtroCliente.toLowerCase()) : true
     );
 
-    const handleExport = () => {
-        Swal.fire("Funcionalidad pendiente", "Aquí se puede implementar exportar Excel/PDF", "info");
+    const exportToPDF = () => {
+        const doc = new jsPDF();
+        doc.setFontSize(18);
+        doc.text("Informe Cliente – Porcinos", 14, 22);
+
+        const tableColumn = ["Cliente", "Porcino", "Raza", "Edad", "Peso"];
+        const tableRows = [];
+
+        clientesFiltrados.forEach((cliente) => {
+            filtrarPorcinos(cliente.porcinos).forEach((porcino) => {
+                const rowData = [
+                    `${cliente.nombres} ${cliente.apellidos}`,
+                    porcino.identificacion,
+                    porcino.raza,
+                    porcino.edad,
+                    porcino.peso,
+                ];
+                tableRows.push(rowData);
+            });
+        });
+
+        autoTable(doc, {
+            head: [tableColumn],
+            body: tableRows,
+            startY: 30,
+            theme: "grid",
+        });
+
+        doc.save("reporte_clientes_porcinos.pdf");
     };
+
 
     if (loading) {
         return (
@@ -63,7 +92,6 @@ const Reportes = () => {
             <div className="bg-white shadow-lg rounded-3 p-4">
                 <h2 className="mb-4 fw-bold text-dark border-bottom pb-2">Informe Cliente – Porcinos</h2>
 
-                {/* Filtros */}
                 <Form className="mb-4">
                     <Row className="g-3">
                         <Col md={4}>
@@ -91,14 +119,13 @@ const Reportes = () => {
                             />
                         </Col>
                         <Col md={2}>
-                            <Button variant="success" onClick={handleExport} className="w-100">
-                                Exportar
+                            <Button variant="success" onClick={exportToPDF} className="w-100">
+                                Exportar PDF
                             </Button>
                         </Col>
                     </Row>
                 </Form>
 
-                {/* Tabla */}
                 <Table hover responsive className="align-middle">
                     <thead className="table-dark">
                         <tr>
