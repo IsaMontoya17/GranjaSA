@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
-import { Container, Table, Button, Spinner, Modal, Form } from "react-bootstrap";
-import { FaEdit, FaTrash } from "react-icons/fa";
-import { getAlimentaciones, deleteAlimentacion, updateAlimentacion } from "../../services/alimentacionService";
+
+import { Container, Table, Button, Spinner, Row, Col } from "react-bootstrap";
+import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
+import { getAlimentaciones, deleteAlimentacion,updateAlimentacion } from "../../services/alimentacionService";
+import { useNavigate } from "react-router-dom";
+
 import Swal from "sweetalert2";
 
 const AlimentacionList = () => {
     const [alimentaciones, setAlimentaciones] = useState([]);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     // Estado para modal de edición
     const [showModal, setShowModal] = useState(false);
@@ -95,9 +99,21 @@ const AlimentacionList = () => {
                 className="bg-white shadow-lg rounded-3 p-4"
                 style={{ width: "100%", maxWidth: "950px" }}
             >
-                <h2 className="mb-4 fw-bold text-dark border-bottom pb-2">
-                    Lista de Alimentaciones
-                </h2>
+                <Row className="align-items-center mb-4">
+                    <Col>
+                        <h2 className="fw-bold text-dark border-bottom pb-2">
+                            Lista de Alimentaciones
+                        </h2>
+                    </Col>
+                    <Col className="text-end">
+                        <Button
+                            variant="success"
+                            onClick={() => navigate("/alimentacion/nuevo")}
+                        >
+                            <FaPlus className="me-1" /> Agregar Nuevo
+                        </Button>
+                    </Col>
+                </Row>
 
                 <Table hover responsive className="align-middle">
                     <thead className="table-dark">

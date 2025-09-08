@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
-import { Container, Table, Button, Spinner } from "react-bootstrap";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { Container, Table, Button, Spinner, Row, Col } from "react-bootstrap";
+import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import { getClientes, deleteCliente } from "../../services/clientesService"; 
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const ClientesList = () => {
     const [clientes, setClientes] = useState([]);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     const fetchData = async () => {
         setLoading(true);
@@ -43,7 +45,7 @@ const ClientesList = () => {
 
         if (confirmDelete.isConfirmed) {
             try {
-                await deleteCliente(cedula); // Debes crear esta función en clienteService
+                await deleteCliente(cedula); 
                 await fetchData();
                 Swal.fire("Eliminado", "El cliente ha sido eliminado.", "success");
             } catch (error) {
@@ -76,9 +78,21 @@ const ClientesList = () => {
                 className="bg-white shadow-lg rounded-3 p-4"
                 style={{ width: "100%", maxWidth: "1100px" }}
             >
-                <h2 className="mb-4 fw-bold text-dark border-bottom pb-2">
-                    Lista de Clientes
-                </h2>
+                <Row className="align-items-center mb-4">
+                    <Col>
+                        <h2 className="fw-bold text-dark border-bottom pb-2">
+                            Lista de Clientes
+                        </h2>
+                    </Col>
+                    <Col className="text-end">
+                        <Button
+                            variant="success"
+                            onClick={() => navigate("/clientes/nuevo")}
+                        >
+                            <FaPlus className="me-1" /> Agregar Nuevo
+                        </Button>
+                    </Col>
+                </Row>
 
                 <Table hover responsive className="align-middle">
                     <thead className="table-dark">
