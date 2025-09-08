@@ -2,6 +2,7 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import { NavLink } from 'react-router-dom';
 
 const CustomNavbar = () => {
     return (
@@ -27,11 +28,11 @@ const CustomNavbar = () => {
                                 }
                                 id="porcinos-dropdown"
                             >
-                                <NavDropdown.Item href="#action/3.1">
+                                <NavDropdown.Item as={NavLink} to="/porcinos">
                                     <i className="fas fa-list me-2"></i>
                                     Listar todos los porcinos
                                 </NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.2">
+                                <NavDropdown.Item as={NavLink} to="/porcinos/nuevo">
                                     <i className="fas fa-plus-circle me-2"></i>
                                     Registrar nuevo porcino
                                 </NavDropdown.Item>
@@ -46,11 +47,11 @@ const CustomNavbar = () => {
                                 }
                                 id="clientes-dropdown"
                             >
-                                <NavDropdown.Item href="#action/4.1">
+                                <NavDropdown.Item as={NavLink} to="/clientes">
                                     <i className="fas fa-list me-2"></i>
                                     Listar todos los clientes
                                 </NavDropdown.Item>
-                                <NavDropdown.Item href="#action/4.2">
+                                <NavDropdown.Item as={NavLink} to="/clientes/nuevo">
                                     <i className="fas fa-user-plus me-2"></i>
                                     Registrar nuevo cliente
                                 </NavDropdown.Item>
@@ -65,27 +66,26 @@ const CustomNavbar = () => {
                                 }
                                 id="alimentacion-dropdown"
                             >
-                                <NavDropdown.Item href="#action/5.1">
+                                <NavDropdown.Item as={NavLink} to="/alimentacion">
                                     <i className="fas fa-list me-2"></i>
                                     Tipos de alimentación
                                 </NavDropdown.Item>
-                                <NavDropdown.Item href="#action/5.2">
+                                <NavDropdown.Item as={NavLink} to="/alimentacion/nuevo">
                                     <i className="fas fa-plus-circle me-2"></i>
                                     Registrar nueva alimentación
                                 </NavDropdown.Item>
                             </NavDropdown>
 
-                            <Nav.Link href="#reportes" className="nav-link">
+                            <Nav.Link as={NavLink} to="/reportes" className="nav-link">
                                 <i className="fas fa-chart-line me-1"></i>
                                 Reportes
                             </Nav.Link>
                         </Nav>
-
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
         </>
     );
-}
+};
 
 export default CustomNavbar;
