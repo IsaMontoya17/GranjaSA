@@ -9,7 +9,7 @@ const CustomNavbar = () => {
         <>
             <Navbar expand="lg" bg="dark" variant="dark" className="px-3">
                 <Container fluid>
-                    <Navbar.Brand href="#home" className="fw-bold d-flex align-items-center">
+                    <Navbar.Brand className="fw-bold d-flex align-items-center" as={NavLink} to="/">
                         <i className="fas fa-piggy-bank me-2"></i>
                         <span className="d-none d-md-inline">Granja - Sistema Porcino</span>
                         <span className="d-inline d-md-none">Sistema Porcino</span>
