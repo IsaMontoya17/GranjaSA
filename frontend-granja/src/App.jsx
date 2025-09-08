@@ -5,6 +5,7 @@ import AlimentacionForm from "./pages/alimentacion/AlimentacionForm";
 import { Routes, Route } from 'react-router-dom'
 import AlimentacionList from './components/alimentacionList/AlimentacionList'
 import ClienteForm from "./pages/clientes/ClienteForm";
+import PoricnoForm from "./pages/porcinos/PorcinoForm";
 
 import './App.css'
 
@@ -18,6 +19,7 @@ function App() {
         <Route path="*" element={<NotFound />} />
         <Route path="/alimentacion/nuevo" element={<AlimentacionForm />} />
         <Route path="/clientes/nuevo" element={<ClienteForm />} />
+        <Route path="/porcinos/nuevo" element={<PoricnoForm />} />
       </Route>
     </Routes>
     </>
