@@ -17,7 +17,7 @@ const Sidebar = () => {
   const [openClientes, setOpenClientes] = useState(false);
 
   return (
-    <aside className={styles.sidebar}>
+    <aside className={`${styles.sidebar} d-none d-md-block`}>
       <h4 className="px-3 py-2 border-bottom">Menú</h4>
       <Nav className="flex-column">
         {/* Porcinos */}

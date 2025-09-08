@@ -8,21 +8,23 @@ const CustomNavbar = () => {
         <>
             <Navbar expand="lg" bg="dark" variant="dark" className="px-3">
                 <Container fluid>
-                    <Navbar.Brand href="#home" className="fw-bold">
+                    <Navbar.Brand href="#home" className="fw-bold d-flex align-items-center">
                         <i className="fas fa-piggy-bank me-2"></i>
-                        Granja - Sistema Porcino
+                        <span className="d-none d-md-inline">Granja - Sistema Porcino</span>
+                        <span className="d-inline d-md-none">Sistema Porcino</span>
                     </Navbar.Brand>
+
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
-                            
-                            <NavDropdown 
+
+                            <NavDropdown
                                 title={
                                     <span>
                                         <i className="fas fa-pig me-1"></i>
                                         Gestión de Porcinos
                                     </span>
-                                } 
+                                }
                                 id="porcinos-dropdown"
                             >
                                 <NavDropdown.Item href="#action/3.1">
@@ -43,14 +45,14 @@ const CustomNavbar = () => {
                                     Registro de alimentación
                                 </NavDropdown.Item>
                             </NavDropdown>
-                            
-                            <NavDropdown 
+
+                            <NavDropdown
                                 title={
                                     <span>
                                         <i className="fas fa-users me-1"></i>
                                         Gestión de Clientes
                                     </span>
-                                } 
+                                }
                                 id="clientes-dropdown"
                             >
                                 <NavDropdown.Item href="#action/4.1">
@@ -71,14 +73,14 @@ const CustomNavbar = () => {
                                     Porcinos por cliente
                                 </NavDropdown.Item>
                             </NavDropdown>
-                            
-                            <NavDropdown 
+
+                            <NavDropdown
                                 title={
                                     <span>
                                         <i className="fas fa-utensils me-1"></i>
                                         Alimentación
                                     </span>
-                                } 
+                                }
                                 id="alimentacion-dropdown"
                             >
                                 <NavDropdown.Item href="#action/5.1">
@@ -94,13 +96,13 @@ const CustomNavbar = () => {
                                     Control de dosis
                                 </NavDropdown.Item>
                             </NavDropdown>
-                            
+
                             <Nav.Link href="#reportes" className="nav-link">
                                 <i className="fas fa-chart-line me-1"></i>
                                 Reportes
                             </Nav.Link>
                         </Nav>
-                        
+
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
