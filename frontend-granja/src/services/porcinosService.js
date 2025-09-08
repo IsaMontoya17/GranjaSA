@@ -1,3 +1,4 @@
+import axios from "axios";
 const API_URL_PORCINOS = "http://localhost:8090/api/porcinos";
 
 export const getPorcinos = async () => {
@@ -28,4 +29,9 @@ export const deletePorcino = async (id) => {
         console.error("deletePorcino error:", error);
         throw error;
     }
+};
+
+export const updatePorcino = async (id, porcino) => {
+    const response = await axios.put(`${API_URL_PORCINOS}/${id}`, porcino);
+    return response.data;
 };

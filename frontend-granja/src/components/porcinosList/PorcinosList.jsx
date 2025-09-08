@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import { Container, Table, Button, Spinner, Row, Col } from "react-bootstrap";
+import { Container, Table, Button, Spinner, Row, Col, Modal, Form } from "react-bootstrap";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
-import { getPorcinos, deletePorcino } from "../../services/porcinosService"; 
+import { getPorcinos, deletePorcino, updatePorcino } from "../../services/porcinosService"; 
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const PorcinosList = () => {
     const [porcinos, setPorcinos] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [showModal, setShowModal] = useState(false);
+    const [selectedPorcino, setSelectedPorcino] = useState(null);
     const navigate = useNavigate();
 
     const fetchData = async () => {
@@ -27,8 +29,23 @@ const PorcinosList = () => {
         fetchData();
     }, []);
 
-    const handleEdit = (id) => {
-        Swal.fire("Editar", `Editar porcino con ID: ${id}`, "info");
+    // 👉 Abrir modal con datos del porcino
+    const handleEdit = (porcino) => {
+        setSelectedPorcino({ ...porcino });
+        setShowModal(true);
+    };
+
+    // 👉 Guardar cambios
+    const handleSave = async () => {
+        try {
+            await updatePorcino(selectedPorcino.id, selectedPorcino);
+            Swal.fire("✅ Éxito", "Porcino actualizado correctamente", "success");
+            setShowModal(false);
+            fetchData();
+        } catch (error) {
+            console.error("Error al actualizar:", error);
+            Swal.fire("❌ Error", "No se pudo actualizar el porcino", "error");
+        }
     };
 
     const handleDelete = async (id) => {
@@ -94,7 +111,6 @@ const PorcinosList = () => {
                     </Col>
                 </Row>
 
-
                 <Table hover responsive className="align-middle">
                     <thead className="table-dark">
                         <tr>
@@ -119,7 +135,7 @@ const PorcinosList = () => {
                                 <td className="text-center">
                                     <Button
                                         className="btn btn-primary btn-sm me-2"
-                                        onClick={() => handleEdit(porcino.id)}
+                                        onClick={() => handleEdit(porcino)}
                                     >
                                         <FaEdit className="me-1" /> Editar
                                     </Button>
@@ -135,6 +151,94 @@ const PorcinosList = () => {
                     </tbody>
                 </Table>
             </div>
+
+            {/* 🔹 Modal de edición */}
+            <Modal show={showModal} onHide={() => setShowModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Editar Porcino</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {selectedPorcino && (
+                        <Form>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Identificación</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    value={selectedPorcino.identificacion}
+                                    onChange={(e) =>
+                                        setSelectedPorcino({ ...selectedPorcino, identificacion: e.target.value })
+                                    }
+                                />
+                            </Form.Group>
+
+                            <Form.Group className="mb-3">
+                                <Form.Label>Raza</Form.Label>
+                                <Form.Select
+                                    value={selectedPorcino.raza}
+                                    onChange={(e) =>
+                                        setSelectedPorcino({ ...selectedPorcino, raza: e.target.value })
+                                    }
+                                >
+                                    <option value="YORK">YORK</option>
+                                    <option value="HAMP">HAMP</option>
+                                    <option value="DUROC">DUROC</option>
+                                </Form.Select>
+                            </Form.Group>
+
+                            <Form.Group className="mb-3">
+                                <Form.Label>Edad</Form.Label>
+                                <Form.Control
+                                    type="number"
+                                    min="0"
+                                    value={selectedPorcino.edad}
+                                    onChange={(e) =>
+                                        setSelectedPorcino({ ...selectedPorcino, edad: e.target.value })
+                                    }
+                                />
+                            </Form.Group>
+
+                            <Form.Group className="mb-3">
+                                <Form.Label>Peso (kg)</Form.Label>
+                                <Form.Control
+                                    type="number"
+                                    min="0"
+                                    value={selectedPorcino.peso}
+                                    onChange={(e) =>
+                                        setSelectedPorcino({ ...selectedPorcino, peso: e.target.value })
+                                    }
+                                />
+                            </Form.Group>
+
+                            <Form.Group className="mb-3">
+                                <Form.Label>Alimentación</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    value={selectedPorcino.alimentacion?.descripcion || ""}
+                                    disabled
+                                />
+                            </Form.Group>
+
+                            <Form.Group className="mb-3">
+                                <Form.Label>Dosis</Form.Label>
+                                <Form.Control
+                                    type="number"
+                                    min="0"
+                                    value={selectedPorcino.alimentacion?.dosis || ""}
+                                    disabled
+                                />
+                            </Form.Group>
+                        </Form>
+                    )}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowModal(false)}>
+                        Cancelar
+                    </Button>
+                    <Button variant="primary" onClick={handleSave}>
+                        Guardar Cambios
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </Container>
     );
 };
