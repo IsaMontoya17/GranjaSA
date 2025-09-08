@@ -1,3 +1,4 @@
+import axios from "axios";
 const API_URL = "http://localhost:8090/api/alimentaciones";
 
 export const getAlimentaciones = async () => {
@@ -28,4 +29,9 @@ export const deleteAlimentacion = async (id) => {
         console.error("deleteAlimentacion error:", error);
         throw error;
     }
+};
+
+export const updateAlimentacion = async (id, alimentacion) => {
+    const response = await axios.put(`${API_URL}/${id}`, alimentacion);
+    return response.data;
 };

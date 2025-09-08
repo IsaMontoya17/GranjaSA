@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
-import { Container, Table, Button, Spinner } from "react-bootstrap";
+import { Container, Table, Button, Spinner, Modal, Form } from "react-bootstrap";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import { getAlimentaciones, deleteAlimentacion } from "../../services/alimentacionService";
+import { getAlimentaciones, deleteAlimentacion, updateAlimentacion } from "../../services/alimentacionService";
 import Swal from "sweetalert2";
 
 const AlimentacionList = () => {
     const [alimentaciones, setAlimentaciones] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    // Estado para modal de edición
+    const [showModal, setShowModal] = useState(false);
+    const [selectedAlimentacion, setSelectedAlimentacion] = useState(null);
 
     const fetchData = async () => {
         setLoading(true);
@@ -25,8 +29,23 @@ const AlimentacionList = () => {
         fetchData();
     }, []);
 
-    const handleEdit = (id) => {
-        Swal.fire("Editar", `Editar alimentación con ID: ${id}`, "info");
+    // Abrir modal con la info a editar
+    const handleEdit = (alimentacion) => {
+        setSelectedAlimentacion({ ...alimentacion });
+        setShowModal(true);
+    };
+
+    // Guardar cambios en el backend
+    const handleSave = async () => {
+        try {
+            await updateAlimentacion(selectedAlimentacion.id, selectedAlimentacion);
+            Swal.fire("Actualizado", "La alimentación se actualizó correctamente", "success");
+            setShowModal(false);
+            fetchData();
+        } catch (error) {
+            console.error("Error al actualizar:", error);
+            Swal.fire("Error", "No se pudo actualizar la alimentación", "error");
+        }
     };
 
     const handleDelete = async (id) => {
@@ -96,7 +115,7 @@ const AlimentacionList = () => {
                                 <td className="text-center">
                                     <Button
                                         className="btn btn-primary btn-sm me-2"
-                                        onClick={() => handleEdit(item.id)}
+                                        onClick={() => handleEdit(item)}
                                     >
                                         <FaEdit className="me-1" /> Editar
                                     </Button>
@@ -112,6 +131,53 @@ const AlimentacionList = () => {
                     </tbody>
                 </Table>
             </div>
+
+            {/* Modal de edición */}
+            <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Editar Alimentación</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {selectedAlimentacion && (
+                        <Form>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Descripción</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    value={selectedAlimentacion.descripcion}
+                                    onChange={(e) =>
+                                        setSelectedAlimentacion({
+                                            ...selectedAlimentacion,
+                                            descripcion: e.target.value,
+                                        })
+                                    }
+                                />
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Dosis</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    value={selectedAlimentacion.dosis}
+                                    onChange={(e) =>
+                                        setSelectedAlimentacion({
+                                            ...selectedAlimentacion,
+                                            dosis: e.target.value,
+                                        })
+                                    }
+                                />
+                            </Form.Group>
+                        </Form>
+                    )}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowModal(false)}>
+                        Cancelar
+                    </Button>
+                    <Button variant="success" onClick={handleSave}>
+                        Guardar Cambios
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </Container>
     );
 };
