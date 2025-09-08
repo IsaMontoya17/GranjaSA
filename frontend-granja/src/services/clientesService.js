@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const API_URL_CLIENTES = "http://localhost:8090/api/clientes";
 
 export const getClientes = async () => {
@@ -28,4 +30,9 @@ export const deleteCliente = async (cedula) => {
         console.error("deleteCliente error:", error);
         throw error;
     }
+};
+
+export const updateCliente = async (cedula, cliente) => {
+    const response = await axios.put(`${API_URL_CLIENTES}/${cedula}`, cliente);
+    return response.data;
 };

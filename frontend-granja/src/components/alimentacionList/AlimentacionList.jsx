@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { Container, Table, Button, Spinner, Row, Col } from "react-bootstrap";
+import { Container, Table, Button, Spinner, Row, Col, Modal, Form } from "react-bootstrap";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import { getAlimentaciones, deleteAlimentacion,updateAlimentacion } from "../../services/alimentacionService";
 import { useNavigate } from "react-router-dom";
@@ -12,7 +12,7 @@ const AlimentacionList = () => {
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
-    // Estado para modal de edición
+
     const [showModal, setShowModal] = useState(false);
     const [selectedAlimentacion, setSelectedAlimentacion] = useState(null);
 
@@ -33,13 +33,13 @@ const AlimentacionList = () => {
         fetchData();
     }, []);
 
-    // Abrir modal con la info a editar
+   
     const handleEdit = (alimentacion) => {
         setSelectedAlimentacion({ ...alimentacion });
         setShowModal(true);
     };
 
-    // Guardar cambios en el backend
+
     const handleSave = async () => {
         try {
             await updateAlimentacion(selectedAlimentacion.id, selectedAlimentacion);

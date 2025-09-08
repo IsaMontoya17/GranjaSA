@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
-import { Container, Table, Button, Spinner, Row, Col } from "react-bootstrap";
+import { Container, Table, Button, Spinner, Row, Col, Modal, Form } from "react-bootstrap";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
-import { getClientes, deleteCliente } from "../../services/clientesService"; 
+import { getClientes, deleteCliente, updateCliente } from "../../services/clientesService"; 
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const ClientesList = () => {
     const [clientes, setClientes] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [showModal, setShowModal] = useState(false);
+    const [selectedCliente, setSelectedCliente] = useState(null);
+
     const navigate = useNavigate();
 
     const fetchData = async () => {
@@ -27,8 +30,21 @@ const ClientesList = () => {
         fetchData();
     }, []);
 
-    const handleEdit = (cedula) => {
-        Swal.fire("Editar", `Editar cliente con cédula: ${cedula}`, "info");
+    const handleEdit = (cliente) => {
+        setSelectedCliente({ ...cliente });
+        setShowModal(true);
+    };
+
+    const handleSave = async () => {
+        try {
+            await updateCliente(selectedCliente.cedula, selectedCliente);
+            Swal.fire("✅ Actualizado", "El cliente se actualizó correctamente", "success");
+            setShowModal(false);
+            fetchData();
+        } catch (error) {
+            console.error("Error al actualizar:", error);
+            Swal.fire("Error", "No se pudo actualizar el cliente", "error");
+        }
     };
 
     const handleDelete = async (cedula) => {
@@ -45,7 +61,7 @@ const ClientesList = () => {
 
         if (confirmDelete.isConfirmed) {
             try {
-                await deleteCliente(cedula); 
+                await deleteCliente(cedula);
                 await fetchData();
                 Swal.fire("Eliminado", "El cliente ha sido eliminado.", "success");
             } catch (error) {
@@ -116,7 +132,7 @@ const ClientesList = () => {
                                 <td className="text-center">
                                     <Button
                                         className="btn btn-primary btn-sm me-2"
-                                        onClick={() => handleEdit(cliente.cedula)}
+                                        onClick={() => handleEdit(cliente)}
                                     >
                                         <FaEdit className="me-1" /> Editar
                                     </Button>
@@ -132,6 +148,80 @@ const ClientesList = () => {
                     </tbody>
                 </Table>
             </div>
+
+            {/* Modal de edición */}
+            <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Editar Cliente</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {selectedCliente && (
+                        <Form>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Nombres</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    value={selectedCliente.nombres}
+                                    onChange={(e) =>
+                                        setSelectedCliente({
+                                            ...selectedCliente,
+                                            nombres: e.target.value,
+                                        })
+                                    }
+                                />
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Apellidos</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    value={selectedCliente.apellidos}
+                                    onChange={(e) =>
+                                        setSelectedCliente({
+                                            ...selectedCliente,
+                                            apellidos: e.target.value,
+                                        })
+                                    }
+                                />
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Dirección</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    value={selectedCliente.direccion}
+                                    onChange={(e) =>
+                                        setSelectedCliente({
+                                            ...selectedCliente,
+                                            direccion: e.target.value,
+                                        })
+                                    }
+                                />
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Teléfono</Form.Label>
+                                <Form.Control
+                                    type="number"
+                                    value={selectedCliente.telefono}
+                                    min="0"
+                                    onChange={(e) =>
+                                        setSelectedCliente({
+                                            ...selectedCliente,
+                                            telefono: e.target.value,
+                                        })
+                                    }
+                                />
+                            </Form.Group>
+                        </Form>
+                    )}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowModal(false)}>
+                        Cancelar
+                    </Button>
+                    <Button variant="success" onClick={handleSave}>
+                        Guardar Cambios
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </Container>
     );
 };
