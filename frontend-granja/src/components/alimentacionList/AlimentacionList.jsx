@@ -1,26 +1,57 @@
 import { useEffect, useState } from "react";
 import { Container, Table, Button, Spinner } from "react-bootstrap";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import { getAlimentaciones } from "../../services/alimentacionService";
+import { getAlimentaciones, deleteAlimentacion } from "../../services/alimentacionService";
+import Swal from "sweetalert2";
 
 const AlimentacionList = () => {
     const [alimentaciones, setAlimentaciones] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = await getAlimentaciones();
-                setAlimentaciones(data);
-            } catch (error) {
-                console.error("Error al cargar alimentaciones:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
+    const fetchData = async () => {
+        setLoading(true);
+        try {
+            const data = await getAlimentaciones();
+            setAlimentaciones(data);
+        } catch (error) {
+            console.error("Error al cargar alimentaciones:", error);
+            Swal.fire("Error", "No se pudieron cargar las alimentaciones", "error");
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
         fetchData();
     }, []);
+
+    const handleEdit = (id) => {
+        Swal.fire("Editar", `Editar alimentación con ID: ${id}`, "info");
+    };
+
+    const handleDelete = async (id) => {
+        const confirmDelete = await Swal.fire({
+            title: "¿Estás seguro?",
+            text: "No podrás revertir esta acción.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar",
+        });
+
+        if (confirmDelete.isConfirmed) {
+            try {
+                await deleteAlimentacion(id);
+                await fetchData();
+                Swal.fire("Eliminado", "La alimentación ha sido eliminada.", "success");
+            } catch (error) {
+                console.error("Error al eliminar:", error);
+                Swal.fire("Error", "No se pudo eliminar la alimentación.", "error");
+            }
+        }
+    };
 
     if (loading) {
         return (
@@ -42,12 +73,15 @@ const AlimentacionList = () => {
             style={{ minHeight: "100vh", backgroundColor: "#f8f9fa" }}
         >
             <div
-                className="bg-white shadow rounded p-4"
-                style={{ width: "100%", maxWidth: "900px" }}
+                className="bg-white shadow-lg rounded-3 p-4"
+                style={{ width: "100%", maxWidth: "950px" }}
             >
-                <h2 className="mb-4 fw-bold">Lista de Alimentaciones</h2>
+                <h2 className="mb-4 fw-bold text-dark border-bottom pb-2">
+                    Lista de Alimentaciones
+                </h2>
+
                 <Table hover responsive className="align-middle">
-                    <thead className="table-light">
+                    <thead className="table-dark">
                         <tr>
                             <th>Descripción</th>
                             <th>Dosis</th>
@@ -57,23 +91,20 @@ const AlimentacionList = () => {
                     <tbody>
                         {alimentaciones.map((item) => (
                             <tr key={item.id}>
-                                <td>{item.descripcion}</td>
+                                <td className="fw-semibold">{item.descripcion}</td>
                                 <td>{item.dosis}</td>
                                 <td className="text-center">
                                     <Button
-                                        variant="outline-primary"
-                                        size="sm"
-                                        className="me-2"
-                                        onClick={() => alert(`Editar alimentación ${item.id}`)}
+                                        className="btn btn-primary btn-sm me-2"
+                                        onClick={() => handleEdit(item.id)}
                                     >
-                                        <FaEdit />
+                                        <FaEdit className="me-1" /> Editar
                                     </Button>
                                     <Button
-                                        variant="outline-danger"
-                                        size="sm"
-                                        onClick={() => alert(`Eliminar alimentación ${item.id}`)}
+                                        className="btn btn-danger btn-sm"
+                                        onClick={() => handleDelete(item.id)}
                                     >
-                                        <FaTrash />
+                                        <FaTrash className="me-1" /> Eliminar
                                     </Button>
                                 </td>
                             </tr>
